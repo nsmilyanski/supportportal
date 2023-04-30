@@ -47,7 +47,7 @@ public class User {
     @Column(name = "join_date")
     private Date joinDate;
 
-    private String[] roles;
+    private String role;
 
     private String[] authorities;
 
