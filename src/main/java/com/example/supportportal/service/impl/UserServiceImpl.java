@@ -1,4 +1,4 @@
-package com.example.supportportal.service;
+package com.example.supportportal.service.impl;
 
 import com.example.supportportal.enumeration.Role;
 import com.example.supportportal.exception.domain.EmailExistException;
@@ -6,6 +6,7 @@ import com.example.supportportal.exception.domain.UserNotFoundException;
 import com.example.supportportal.exception.domain.UsernameExistException;
 import com.example.supportportal.model.User;
 import com.example.supportportal.repository.UserRepository;
+import com.example.supportportal.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
