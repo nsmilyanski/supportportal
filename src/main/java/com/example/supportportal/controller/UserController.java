@@ -38,7 +38,7 @@ public class UserController extends ExceptionHandling {
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) throws UserNotFoundException, EmailExistException, UsernameExistException {
         authenticate(user.getEmail(), user.getPassword());
-        User loginUser = userService.findUserByUsername(user.getUsername());
+        User loginUser = userService.findUserByEmail(user.getEmail());
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
 
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
