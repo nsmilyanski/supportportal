@@ -1,5 +1,6 @@
 package com.example.supportportal.service.impl;
 
+import com.example.supportportal.controller.request.NewUserRequest;
 import com.example.supportportal.enumeration.Role;
 import com.example.supportportal.exception.domain.EmailExistException;
 import com.example.supportportal.exception.domain.EmailNotFoundException;
@@ -99,40 +100,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
-        validateNewUsernameAndEmail(EMPTY, username, email);
+    public User addNewUser(NewUserRequest request) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+        validateNewUsernameAndEmail(EMPTY, request.getUsername(), request.getEmail());
         User user = new User();
         user.setUserId(generateuserId());
         String password = generatePassword();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setUsername(username);
-        user.setEmail(email);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
         user.setPassword(encodePassword(password));
         user.setAcrive(true);
         user.setNotLocked(true);
-        user.setRole(getRoleEnumName(role).name());
-        user.setAuthorities(getRoleEnumName(role).getAuthorities());
-        user.setProfileImgUrl(getTemporaryProfileImageUrl(username));
+        user.setRole(getRoleEnumName(request.getRole()).name());
+        user.setAuthorities(getRoleEnumName(request.getRole()).getAuthorities());
+        user.setProfileImgUrl(getTemporaryProfileImageUrl(request.getUsername()));
         userRepository.save(user);
-        saveProfileImage(user, profileImage);
+        saveProfileImage(user, request.getProfileImage());
         return user;
     }
 
     @Override
-    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNotLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
-        User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
+    public User updateUser(NewUserRequest request) throws UserNotFoundException, EmailExistException, UsernameExistException, IOException {
+        User currentUser = validateNewUsernameAndEmail(request.getCurrentUsername(), request.getUsername(), request.getEmail());
 
-        currentUser.setFirstName(newFirstName);
-        currentUser.setLastName(newLastName);
-        currentUser.setUsername(newUsername);
-        currentUser.setEmail(newEmail);
-        currentUser.setAcrive(true);
-        currentUser.setNotLocked(true);
-        currentUser.setRole(getRoleEnumName(role).name());
-        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
+        currentUser.setFirstName(request.getFirstName());
+        currentUser.setLastName(request.getLastName());
+        currentUser.setUsername(request.getUsername());
+        currentUser.setEmail(request.getEmail());
+        currentUser.setAcrive(request.isActive());
+        currentUser.setNotLocked(request.isNotLocked());
+        currentUser.setRole(getRoleEnumName(request.getRole()).name());
+        currentUser.setAuthorities(getRoleEnumName(request.getRole()).getAuthorities());
         userRepository.save(currentUser);
-        saveProfileImage(currentUser, profileImage);
+        saveProfileImage(currentUser, request.getProfileImage());
         return currentUser;
     }
 
